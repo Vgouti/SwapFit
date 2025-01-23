@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}For You{% endblock title %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<div class="container mt-4">
+    <h3 class="mb-4">For You</h3>
+
+    {% if posts %}
+        <div class="feed">
+            {% for post in posts %}
+                <!-- Post Card -->
+                <div class="card mb-4">
+                    <!-- Post Header -->
+                    <div class="card-header d-flex align-items-center">
+                        <img src="{% if post.user.profile.profile_pic %}{{ post.user.profile.profile_pic.url }}{% else %}/static/default_image.png{% endif %}" 
+                        alt="Profile Picture" 
+                        class="img-fluid rounded-circle" 
+                        style="width: 40px; height: 40px;">
+                        <a href="{% url 'view_profile' post.user.username %}" class="text-decoration-none ms-2">
+                            <strong>{{ post.user.username }}</strong>
+                        </a>
+                    </div>
+
+                    <!-- Post Image -->
+                    <div class="post-image-container">
+                        <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
+                    </div>
+                    
+                    <!-- Post Body -->
+                    <div class="card-body">
+                        <p class="card-text"><strong>{{ post.user.username }}</strong> {{ post.caption }}</p>
+                        <hr>
+
+                        <!-- Likes and Comments -->
+                        <div class="d-flex justify-content-between">
+                            <form method="POST" action="{% url 'like_post' post.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-light">
+                                    <i class="fa {% if post.is_liked_by_user %}fa-heart text-danger{% else %}fa-heart-o{% endif %}"></i>
+                                    {{ post.likes.count }} Likes
+                                </button>
+                            </form>
+                            <span>{{ post.comments.count }} Comments</span>
+                        </div>
+
+                        <!-- Comment Form -->
+                        <form method="POST" action="{% url 'add_comment' post.id %}" class="mt-3">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="text" class="form-control" placeholder="Add a comment..." required>
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </div>
+                        </form>
+
+                        <!-- Display Comments -->
+                        <div class="mt-3">
+                            {% for comment in post.comments.all %}
+                                <p class="mb-1"><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Post Footer -->
+                    <div class="card-footer text-muted">
+                        <small>{{ post.created_at|date:"F j, Y, g:i a" }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No posts to show. Follow users to see their posts here!</p>
+    {% endif %}
+</div>
+{% endblock content %}

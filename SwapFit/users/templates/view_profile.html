@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ profile_user.username }}'s Profile{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-md-3 text-center">
+            <img src="{% if profile_user.profile.profile_pic %}{{ profile_user.profile.profile_pic.url }}{% else %}/static/default_image.png{% endif %}" 
+                 alt="Profile Picture" 
+                 class="img-fluid rounded-circle" 
+                 style="width: 150px; height: 150px;">
+
+            <h4 class="mt-3">{{ profile_user.username }}</h4>
+            <p>{{ profile_user.profile.bio }}</p>
+            <p>
+                <strong>{{ profile_user.followers.count }}</strong> Followers |
+                <strong>{{ profile_user.following.count }}</strong> Following
+            </p>
+            {% if profile_user != user %}
+                <form method="POST" action="{% url 'follow_user' profile_user.username %}">
+                    {% csrf_token %}
+                    {% if is_following %}
+                        <button type="submit" class="btn btn-danger btn-sm">Unfollow</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+                    {% endif %}
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- User Posts -->
+        <div class="col-md-9">
+            <h5>Posts</h5>
+            <div class="row">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image" 
+                                     style="height: 250px; width: 100%; object-fit: cover;" 
+                                     data-bs-toggle="modal" data-bs-target="#postModal{{ post.id }}">
+                                <div class="card-body">
+                                    <p class="card-text">{{ post.caption }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Post Details -->
+                        <div class="modal fade" id="postModal{{ post.id }}" tabindex="-1" 
+                             aria-labelledby="postModalLabel{{ post.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body p-0">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid w-100">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="p-3">
+                                                    <h5>{{ post.caption }}</h5>
+                                                    <p class="text-muted">Posted by {{ post.user.username }}</p>
+                                                    <hr>
+                                                    <p><i class="fa fa-heart text-danger"></i> {{ post.likes.count }} likes</p>
+                                                    <h6>Comments</h6>
+                                                    <ul class="list-unstyled">
+                                                        {% for comment in post.comments.all %}
+                                                            <li>
+                                                                <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                                                            </li>
+                                                        {% empty %}
+                                                            <li>No comments yet.</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No posts yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Wardrobe Section -->
+            <h3>Wardrobe</h3>
+            <div class="row">
+                {% if wardrobe_items %}
+                    {% for item in wardrobe_items %}
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.name }}</h5>
+                                <p class="card-text"><strong>Category:</strong> {{ item.category }}</p>
+                                <p class="card-text"><strong>Size:</strong> {{ item.size }}</p>
+                                <p class="card-text"><strong>Price/Day:</strong> ${{ item.price_per_day }}</p>
+                                
+                                <a href="{% url 'rent_item_request' item.id %}" class="btn btn-success btn-sm">Rent Item</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for Wardrobe Item Details -->
+                    <div class="modal fade" id="wardrobeItemModal{{ item.id }}" tabindex="-1" 
+                        aria-labelledby="wardrobeItemModalLabel{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-body p-0">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <img src="{{ item.image.url }}" alt="Item Image" class="img-fluid w-100">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-3">
+                                                <h5>{{ item.name }}</h5>
+                                                <p class="text-muted">Owned by {{ item.user.username }}</p>
+                                                <hr>
+                                                <p><strong>Category:</strong> {{ item.category }}</p>
+                                                <p><strong>Size:</strong> {{ item.size }}</p>
+                                                <p><strong>Color:</strong> {{ item.color }}</p>
+                                                <p><strong>Description:</strong> {{ item.description|default:"No description provided." }}</p>
+                                                <p><strong>Price per day:</strong> 
+                                                    {% if item.price_per_day %}
+                                                        ${{ item.price_per_day }}
+                                                    {% else %}
+                                                        N/A
+                                                    {% endif %}
+                                                </p>
+                                                <p><strong>Available:</strong> 
+                                                    {% if item.availability %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </p>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No wardrobe items yet.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

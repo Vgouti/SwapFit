@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | SwapFit{% endblock title %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1>Welcome to SwapFit</h1>
+    <p>Your one-stop platform for sustainable fashion!</p>
+    <a href="{% url 'register' %}" class="btn btn-success">Get Started</a>
+</div>
+{% endblock content %}

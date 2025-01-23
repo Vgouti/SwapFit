@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Explore | SwapFit{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-success text-center mb-4">Explore Trends</h2>
+    <p class="text-muted text-center">Discover popular outfits, styles, and fashion inspirations curated for you.</p>
+    
+    <div class="row g-4">
+        <!-- Example Item -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend1.jpg' %}" class="card-img-top" alt="Trend 1">
+                <div class="card-body">
+                    <h5 class="card-title">Streetwear Style</h5>
+                    <p class="card-text">Explore the best streetwear outfits trending globally.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend2.jpg' %}" class="card-img-top" alt="Trend 2">
+                <div class="card-body">
+                    <h5 class="card-title">Sustainable Fashion</h5>
+                    <p class="card-text">Get inspired by eco-friendly and sustainable fashion ideas.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend3.jpg' %}" class="card-img-top" alt="Trend 3">
+                <div class="card-body">
+                    <h5 class="card-title">Party Looks</h5>
+                    <p class="card-text">Check out the latest party outfits that are turning heads.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend4.jpg' %}" class="card-img-top" alt="Trend 4">
+                <div class="card-body">
+                    <h5 class="card-title">Minimalist Style</h5>
+                    <p class="card-text">Browse simple yet elegant styles for any occasion.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend5.jpg' %}" class="card-img-top" alt="Trend 5">
+                <div class="card-body">
+                    <h5 class="card-title">Work Attire</h5>
+                    <p class="card-text">Discover professional looks for your workplace.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <div class="card">
+                <img src="{% static 'images/trend6.jpg' %}" class="card-img-top" alt="Trend 6">
+                <div class="card-body">
+                    <h5 class="card-title">Casual Outfits</h5>
+                    <p class="card-text">Find the perfect casual looks for your everyday needs.</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

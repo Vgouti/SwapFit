@@ -1,0 +1,130 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ user.username }}'s Profile{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- User Information -->
+    <div class="row">
+        <div class="col-md-3 text-center">
+            {% if user.profile.profile_pic %}
+                <img src="{{ user.profile.profile_pic.url }}" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+            {% else %}
+                <img src="{% static 'default_image.png' %}" alt="Default Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px;">
+            {% endif %}
+            <h4 class="mt-3">{{ user.username }}</h4>
+            <p>{{ user.profile.bio }}</p>
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary btn-sm d-block mb-2">Edit Profile</a>
+            <a href="{% url 'add_wardrobe_item' %}" class="btn btn-success btn-sm d-block mb-2">Add Wardrobe Item</a>
+            <a href="{% url 'create_post' %}" class="btn btn-success btn-sm d-block mb-2">Add Post</a>
+        </div>        
+        <div class="col-md-9">
+            <!-- Stats -->
+            <div class="d-flex justify-content-between mb-4">
+                <div>
+                    <h5>Posts</h5>
+                    <p>{{ posts.count }}</p>
+                </div>
+                <div>
+                    <h5>Followers</h5>
+                    <p>{{ followers_count }}</p>
+                </div>
+                <div>
+                    <h5>Following</h5>
+                    <p>{{ following_count }}</p>
+                </div>
+            </div>
+
+            <!-- User Posts -->
+            <h5>Your Posts</h5>
+            <div class="row">
+                {% for post in posts %}
+                <div class="col-md-4 mb-3">
+                    <div class="card" data-bs-toggle="modal" data-bs-target="#postModal{{ post.id }}">
+                        <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image" style="height: 250px; width: 100%; object-fit: cover;">
+                        <div class="card-body">
+                            <p class="card-text">{{ post.caption|truncatewords:10 }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for Enlarged Post View -->
+                <div class="modal fade" id="postModal{{ post.id }}" tabindex="-1" aria-labelledby="postModalLabel{{ post.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div class="row">
+                                    <!-- Post Image -->
+                                    <div class="col-md-8">
+                                        <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid w-100">
+                                    </div>
+                                    <!-- Post Details -->
+                                    <div class="col-md-4">
+                                        <div class="p-3">
+                                            <h5>{{ post.caption }}</h5>
+                                            <p class="text-muted">Posted by {{ post.user.username }}</p>
+                                            <hr>
+                                            <!-- Likes Section -->
+                                            <p><i class="fa fa-heart text-danger"></i> {{ post.likes.count }} likes</p>
+                                            <!-- Comments Section -->
+                                            <h6>Comments</h6>
+                                            <ul class="list-unstyled">
+                                                {% for comment in post.comments.all %}
+                                                <li>
+                                                    <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+                                                </li>
+                                                {% empty %}
+                                                <li>No comments yet.</li>
+                                                {% endfor %}
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No posts yet.</p>
+                {% endfor %}
+            </div>
+
+
+            <!-- Wardrobe Items -->
+            <h5 class="mt-4">Wardrobe Items</h5>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Your Wardrobe Items</h3>
+                    <div class="row">
+                        {% for item in user.wardrobe_items.all %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.name }}</h5>
+                                        <p class="card-text">Category: {{ item.category }}</p>
+                                        <p class="card-text">Color: {{ item.color }}</p>
+                                        <p class="card-text">Size: {{ item.size }}</p>
+                                        <p class="card-text">Price Per Day: ₹{{ item.price_per_day }}</p>
+                                        <p class="card-text">Availability: {{ item.availability|yesno:"Available,Unavailable" }}</p>
+                                        <a href="{% url 'delete_wardrobe_item' item.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-md-12 text-center">
+                                <p class="text-muted">No items found in your wardrobe. Add some items to get started!</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

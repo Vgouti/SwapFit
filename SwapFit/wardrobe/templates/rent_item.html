@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Rent Items | SwapFit{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center text-success mb-4">Rent Items</h1>
+    <div class="row">
+        {% for item in items %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text text-muted">{{ item.description }}</p>
+                    <p><strong>Price: ₹{{ item.price_per_day }}/day</strong></p>
+                    <!-- Rent Button -->
+                    <form method="post" action="{% url 'rent_item_request' item.id %}">
+                        {% csrf_token %}
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control mb-2" required>
+
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control mb-2" required>
+                        <button class="btn btn-success w-100" type="submit">Request Rent</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No items available for rent.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

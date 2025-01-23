@@ -1,0 +1,38 @@
+/* Feed Styling */
+.feed {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Post Image Styling */
+.post-image-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Card Body Adjustments */
+.card-body {
+    padding: 10px 15px;
+}
+
+/* Card Header */
+.card-header img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+/* Buttons Styling */
+.btn-light {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Request Swap | SwapFit{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center text-success mb-4">Swap Request</h1>
+    <h3>Item Requested: {{ item_requested.name }}</h3>
+    <div class="row mt-4">
+        <h4>Select an item from your wardrobe to offer:</h4>
+        <form method="post" action="{% url 'request_swap' item_requested.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <select name="offered_item" class="form-control" required>
+                    {% for item in user_items %}
+                    <option value="{{ item.id }}">{{ item.name }} - Available</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Send Swap Request</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

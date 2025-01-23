@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Requests{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center text-success mb-4">Manage Requests</h1>
+    {% for request in pending_requests %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ request.transaction_type }} Request</h5>
+            <p><strong>Item:</strong> {{ request.item.name }}</p>
+            <p><strong>Requested By:</strong> {{ request.user.username }}</p>
+            <p><strong>Status:</strong> {{ request.status }}</p>
+            <div class="d-flex">
+                <a href="{% url 'approve_request' request.id %}" class="btn btn-success me-2">Approve</a>
+                <a href="{% url 'reject_request' request.id %}" class="btn btn-danger">Reject</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No pending requests.</p>
+    {% endfor %}
+</div>
+{% endblock content %}
