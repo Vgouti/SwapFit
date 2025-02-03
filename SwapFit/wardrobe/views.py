@@ -53,25 +53,26 @@ def request_swap(request, item_id):
     item_requested = get_object_or_404(WardrobeItem, id=item_id)
     user_items = WardrobeItem.objects.filter(user=request.user, availability=True)
 
+    # Prevent users from swapping their own items
     if item_requested.user == request.user:
-        messages.error(request, "You cannot swap with your own item.")
+        messages.error(request, "You cannot swap your own item.")
         return redirect('wardrobe_list')
 
     if request.method == 'POST':
         offered_item_id = request.POST.get('offered_item')
         item_offered = get_object_or_404(WardrobeItem, id=offered_item_id, user=request.user)
 
-        # Create transaction for swap
+        # Create a swap transaction
         Transaction.objects.create(
             user=request.user,
             item=item_requested,
+            offered_item=item_offered,
             transaction_type='Swap',
             counterparty=item_requested.user,
-            offered_item=item_offered,  # Assuming you track offered item in the transaction model
             status='Pending',
         )
 
-        # Mark both items as unavailable
+        # Mark items as unavailable
         item_requested.availability = False
         item_offered.availability = False
         item_requested.save()

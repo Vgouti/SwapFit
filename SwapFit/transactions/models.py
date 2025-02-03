@@ -10,6 +10,7 @@ class Transaction(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='transactions')
     item = models.ForeignKey(WardrobeItem, on_delete=models.CASCADE)
+    offered_item = models.ForeignKey(WardrobeItem, on_delete=models.SET_NULL, null=True, blank=True, related_name='offered_transactions')
     transaction_type = models.CharField(max_length=10, choices=TRANSACTION_TYPE_CHOICES)
     counterparty = models.ForeignKey(User, on_delete=models.CASCADE, related_name='counter_transactions')
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

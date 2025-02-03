@@ -14,27 +14,19 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 def home(request):
     return render(request, 'home.html')
+@login_required
 def foryou(request):
-    # Get the logged-in user
     user = request.user
-
-    # Find the users the current user is following
     following_users = Follower.objects.filter(follower=user).values_list('user', flat=True)
-
-    # Get posts from the logged-in user and the users they are following
-    posts = Post.objects.filter(user__in=[user.id, *following_users]).order_by('-created_at')
-
-    # Add a flag to indicate if the logged-in user liked each post
+    posts = Post.objects.filter(user__in=[user.id, *following_users]).prefetch_related('likes', 'comments').order_by('-created_at')
     for post in posts:
         post.is_liked_by_user = post.likes.filter(user=user).exists()
-
     context = {
         'posts': posts,
     }
     return render(request, 'foryoupage.html', context)
 def register(request):
     if request.method == 'POST':
-        # Fetching form data
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
