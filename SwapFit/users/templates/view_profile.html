@@ -101,7 +101,7 @@
                                 <h5 class="card-title">{{ item.name }}</h5>
                                 <p class="card-text"><strong>Category:</strong> {{ item.category }}</p>
                                 <p class="card-text"><strong>Size:</strong> {{ item.size }}</p>
-                                <p class="card-text"><strong>Price/Day:</strong> ${{ item.price_per_day }}</p>
+                                <p class="card-text"><strong>Price/Day:</strong> Rs.{{ item.price_per_day }}</p>
                                 
                                 <a href="{% url 'rent_item_request' item.id %}" class="btn btn-success btn-sm">Rent Item</a>
                                 <a href="{% url 'request_swap' item.id %}" class="btn btn-primary btn-sm">Swap Item</a>

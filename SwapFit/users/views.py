@@ -189,7 +189,7 @@ def view_profile(request, username):
     is_following = False
     if request.user.is_authenticated:
         is_following = Follower.objects.filter(user=user, follower=request.user).exists()
-    wardrobe_items = WardrobeItem.objects.filter(user=user)
+    wardrobe_items = WardrobeItem.objects.filter(user=user,availability=True)
     context = {
         'profile_user': user,
         'posts': posts,
