@@ -18,7 +18,7 @@ def home(request):
 def foryou(request):
     user = request.user
     following_users = Follower.objects.filter(follower=user).values_list('user', flat=True)
-    posts = Post.objects.filter(user__in=[user.id, *following_users]).prefetch_related('likes', 'comments').order_by('-created_at')
+    posts = Post.objects.filter(user__in=following_users).prefetch_related('likes', 'comments').order_by('-created_at')
     for post in posts:
         post.is_liked_by_user = post.likes.filter(user=user).exists()
     context = {
